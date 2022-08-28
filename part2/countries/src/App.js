@@ -1,6 +1,30 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+const Weather = ({ country }) => {
+	const [weather, setWeather] = useState({})
+	const api_key = process.env.REACT_APP_API_KEY
+	const url = `https://api.openweathermap.org/data/2.5/weather?q=${country.capital[0]}&appid=${api_key}&units=metric`
+	try {
+		axios.get(url).then(response => setWeather(response.data))
+		if (weather) {
+			return (
+				<div>
+					<h2>Weather in {country.capital[0]}</h2>
+					<p>temprature: {weather.main.temp} Celcius</p>
+					<img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="" />
+					<p>wind: {weather.wind.speed} m/s</p>
+				</div>
+			)
+		}
+	}
+	catch {
+		return (
+			<p>cannot fetch weather information</p>
+		)
+	}
+}
+
 const Country = ({ country }) => {
 	return (
 		<div>
@@ -9,7 +33,7 @@ const Country = ({ country }) => {
 			<p>Area: {country.area}</p>
 			<h3>languages:</h3>
 			<ul>
-				{Object.entries(country.languages).map(lang => <li key={lang[0]}>{lang[1]}</li>)}
+				{Object.entries(country.languages).map((lang, i) => <li key={i}>{lang[1]}</li>)}
 			</ul>
 			<img src={country.flags.png} alt="flag" />
 		</div>
@@ -48,11 +72,14 @@ const Countries = ({ countries }) => {
 		)
 	} else if (countries.length === 1) {
 		return (
-			<Country country={countries[0]} />
+			<div>
+				<Country country={countries[0]} />
+				<Weather country={countries[0]} />
+			</div>
 		)
 	} else if (countries.length > 1) {
 		return (
-			countries.map(country => <CountriesList country={country} />)
+			countries.map((country, i) => <CountriesList key={i} country={country} />)
 		)
 	} else {
 		return (
