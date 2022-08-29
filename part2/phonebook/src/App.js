@@ -47,6 +47,8 @@ const App = () => {
 	const refreshPage = (data) => {
 		setPersons(data)
 		setShowSearch(data)
+		setNewNumber('')
+		setNewName('')
 	}
 
 	useEffect(() => {
@@ -72,11 +74,15 @@ const App = () => {
 			}
 			services.addPerson(nameObject).then(returnedPerson => {
 				refreshPage(persons.concat(returnedPerson))
-				setNewNumber('')
-				setNewName('')
 			})
 		} else {
-			alert(`${newName} is already added to phonebook`)
+			const person = persons.find(person => person.name == newName)
+			const changedPerson = { ...person, number: newNumber }
+			if (window.confirm(`${person.name} is already added to phonebook, replace the old one with the new one?`)) {
+				services.updatePerson(person.id, changedPerson).then(response => {
+					services.getAll().then(returnedPersons => refreshPage(returnedPersons))
+				})
+			}
 		}
 	}
 
