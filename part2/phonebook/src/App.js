@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import services from './services/persons';
 
 const Filter = ({ search }) => {
 	return (
@@ -47,9 +48,7 @@ const App = () => {
 	}
 
 	useEffect(() => {
-		axios.get('http://localhost:3001/persons').then(response => {
-			refreshPage(response.data)
-		})
+		services.getAll().then(returnedPersons => refreshPage(returnedPersons))
 	}, [])
 
 	const handleNameChange = (event) => {
@@ -69,8 +68,8 @@ const App = () => {
 				number: newNumber,
 				id: persons.at(-1).id + 1
 			}
-			axios.post('http://localhost:3001/persons', nameObject).then(response => {
-				refreshPage(persons.concat(response.data))
+			services.addPerson(nameObject).then(returnedPerson => {
+				refreshPage(persons.concat(returnedPerson))
 				setNewNumber('')
 				setNewName('')
 			})

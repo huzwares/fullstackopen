@@ -24,6 +24,11 @@
       "name": "new name",
       "number": "02191200",
       "id": 5
+    },
+    {
+      "name": "other name",
+      "number": "9123950",
+      "id": 6
     }
   ]
 }
