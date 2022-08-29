@@ -2,6 +2,26 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import services from './services/persons';
 
+const Notification = ({ message }) => {
+	const notificationStyle = {
+		color: 'green',
+		fontSize: 20,
+		background: 'lightgray',
+		borderStyle: 'solid',
+		borderRadius: 5,
+		padding: 10,
+		marginBottom: 10
+	}
+	if (message === null) {
+		return null
+	}
+	return (
+		<div style={notificationStyle}>
+			{message}
+		</div>
+	)
+}
+
 const Filter = ({ search }) => {
 	return (
 		<p>filter shown with <input onChange={search} /></p>
@@ -43,7 +63,7 @@ const App = () => {
 	const [newName, setNewName] = useState('')
 	const [newNumber, setNewNumber] = useState('')
 	const [showSearch, setShowSearch] = useState(persons)
-
+	const [notification, setNotification] = useState(null)
 	const refreshPage = (data) => {
 		setPersons(data)
 		setShowSearch(data)
@@ -73,13 +93,21 @@ const App = () => {
 				id: persons.at(-1).id + 1
 			}
 			services.addPerson(nameObject).then(returnedPerson => {
+				setNotification(`Added ${returnedPerson.name}`)
+				setTimeout(() => {
+					setNotification(null)
+				}, 5000)
 				refreshPage(persons.concat(returnedPerson))
 			})
 		} else {
 			const person = persons.find(person => person.name == newName)
 			const changedPerson = { ...person, number: newNumber }
 			if (window.confirm(`${person.name} is already added to phonebook, replace the old one with the new one?`)) {
-				services.updatePerson(person.id, changedPerson).then(response => {
+				services.updatePerson(person.id, changedPerson).then(returnedPerson => {
+					setNotification(`${returnedPerson.name} number updated`)
+					setTimeout(() => {
+						setNotification(null)
+					}, 5000)
 					services.getAll().then(returnedPersons => refreshPage(returnedPersons))
 				})
 			}
@@ -90,6 +118,10 @@ const App = () => {
 		if (window.confirm(`Delete ${person.name}?`)) {
 			services.deletePerson(person.id).then(response => {
 				console.log(response)
+				setNotification(`${person.name} deleted from phonebook`)
+				setTimeout(() => {
+					setNotification(null)
+				}, 5000)
 				services.getAll().then(returnedPersons => refreshPage(returnedPersons))
 			})
 		}
@@ -98,7 +130,7 @@ const App = () => {
 	return (
 		<div>
 			<h2>Phonebook</h2>
-
+			<Notification message={notification} />
 			<Filter search={handleSearch} />
 
 			<h2>add a new</h2>
