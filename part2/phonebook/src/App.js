@@ -12,12 +12,22 @@ const Notification = ({ message }) => {
 		padding: 10,
 		marginBottom: 10
 	}
+	const errorStyle = {
+		color: 'red',
+		fontSize: 20,
+		background: 'lightgray',
+		borderStyle: 'solid',
+		borderRadius: 5,
+		padding: 10,
+		marginBottom: 10
+	}
 	if (message === null) {
 		return null
 	}
+
 	return (
-		<div style={notificationStyle}>
-			{message}
+		<div style={message[1] === "notification" ? notificationStyle : errorStyle}>
+			{message[0]}
 		</div>
 	)
 }
@@ -93,37 +103,51 @@ const App = () => {
 				id: persons.at(-1).id + 1
 			}
 			services.addPerson(nameObject).then(returnedPerson => {
-				setNotification(`Added ${returnedPerson.name}`)
+				setNotification([`Added ${returnedPerson.name}`, "notification"])
 				setTimeout(() => {
 					setNotification(null)
 				}, 5000)
-				refreshPage(persons.concat(returnedPerson))
+			}).catch(error => {
+				setNotification([`somthing happend. please try again. error message: ${error.message}`, "error"])
+				setTimeout(() => {
+					setNotification(null)
+				}, 5000)
 			})
 		} else {
 			const person = persons.find(person => person.name == newName)
 			const changedPerson = { ...person, number: newNumber }
 			if (window.confirm(`${person.name} is already added to phonebook, replace the old one with the new one?`)) {
 				services.updatePerson(person.id, changedPerson).then(returnedPerson => {
-					setNotification(`${returnedPerson.name} number updated`)
+					setNotification([`${returnedPerson.name} number updated`, "notification"])
 					setTimeout(() => {
 						setNotification(null)
 					}, 5000)
-					services.getAll().then(returnedPersons => refreshPage(returnedPersons))
+				}).catch(error => {
+					setNotification([`somthing happend. please try again. error message: ${error.message}`, "error"])
+					setTimeout(() => {
+						setNotification(null)
+					}, 5000)
 				})
 			}
 		}
+		services.getAll().then(returnedPersons => refreshPage(returnedPersons))
 	}
 
 	const delP = (person) => {
 		if (window.confirm(`Delete ${person.name}?`)) {
 			services.deletePerson(person.id).then(response => {
 				console.log(response)
-				setNotification(`${person.name} deleted from phonebook`)
+				setNotification([`${person.name} deleted from phonebook`, "notification"])
 				setTimeout(() => {
 					setNotification(null)
 				}, 5000)
-				services.getAll().then(returnedPersons => refreshPage(returnedPersons))
+			}).catch(error => {
+				setNotification([`Information of ${person.name} has already been removed from server. error message: ${error.message}`, "error"])
+				setTimeout(() => {
+					setNotification(null)
+				}, 5000)
 			})
+			services.getAll().then(returnedPersons => refreshPage(returnedPersons))
 		}
 	}
 
