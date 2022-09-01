@@ -123,7 +123,7 @@ const App = () => {
 						setNotification(null)
 					}, 5000)
 				}).catch(error => {
-					setNotification([`somthing happend. please try again. error message: ${error.message}`, "error"])
+					setNotification([`please try again. error message: ${error.response.data.error}`, "error"])
 					setTimeout(() => {
 						setNotification(null)
 					}, 5000)
