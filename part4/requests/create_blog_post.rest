@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-	"title": "second posts",
+	"title": "third posts",
 	"author": "fso 2022",
-	"ulr": "https://fullstackopen.com/en/part4/structure_of_backend_application_introduction_to_testing#exercises-4-1-4-2",
-	"likes": 2
+	"ulr": "https://fullstackopen.com/en/part4/",
+	"likes": 12
 }
