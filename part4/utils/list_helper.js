@@ -23,6 +23,32 @@ const favoriteBlog = (blogs) => {
 	}
 }
 
+const mostBlogs = (blogs) => {
+	if (blogs.length === 0) {
+		return 0
+	}
+	const authors = blogs.map(blog => blog.author)
+	let authorMap = {}
+	let mostRepeated = authors[0]
+	let maxCount = 1
+	for (let i = 0; i < authors.length; i++) {
+		let item = authors[i]
+		if (authorMap[item] == null) {
+			authorMap[item] = 1
+		} else {
+			authorMap[item] += 1
+		}
+		if (authorMap[item] > maxCount) {
+			mostRepeated = item;
+			maxCount = authorMap[item]
+		}
+	}
+	return {
+		author: mostRepeated,
+		blogs: maxCount
+	}
+}
+
 module.exports = {
-	dummy, totalLikes, favoriteBlog
+	dummy, totalLikes, favoriteBlog, mostBlogs
 }
