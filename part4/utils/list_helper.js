@@ -49,6 +49,28 @@ const mostBlogs = (blogs) => {
 	}
 }
 
+const mostLikes = (blogs) => {
+	if (blogs.length === 0) {
+		return 0
+	}
+	const authors = blogs.map(blog => blog.author)
+	const likes = blogs.map(blog => blog.likes)
+	let authorMap = {}
+	for (let i = 0; i < authors.length; i++) {
+		let item = authors[i]
+		if (authorMap[item] == null) {
+			authorMap[item] = likes[i]
+		} else {
+			authorMap[item] += likes[i]
+		}
+	}
+	const mostLikedAuthor = Object.entries(authorMap).sort((x, y) => y[1] - x[1])[0]
+	return {
+		author: mostLikedAuthor[0],
+		likes: mostLikedAuthor[1]
+	}
+}
+
 module.exports = {
-	dummy, totalLikes, favoriteBlog, mostBlogs
+	dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes
 }
