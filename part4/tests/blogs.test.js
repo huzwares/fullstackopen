@@ -9,6 +9,13 @@ test('get blog list (=3)', async () => {
 	expect(response.body).toHaveLength(3)
 })
 
+test('check unique identiifier', async () => {
+	const response = await api.get('/api/blogs')
+	response.body.forEach(blog => {
+		expect(blog.id).toBeDefined()
+	});
+})
+
 afterAll(() => {
 	mongoose.connection.close()
 })
