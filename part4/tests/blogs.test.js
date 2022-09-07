@@ -1,12 +1,21 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const helper = require('./test_helper')
 const app = require('../app')
+const Blog = require('../models/blog')
 
 const api = supertest(app)
 
-test('get blog list (=3)', async () => {
+beforeEach(async () => {
+	await Blog.deleteMany({})
+	const blogPosts = helper.initialBlog.map(blog => new Blog(blog))
+	const promiseArray = blogPosts.map(blog => blog.save())
+	await Promise.all(promiseArray)
+})
+
+test('get blog list', async () => {
 	const response = await api.get('/api/blogs').expect('Content-Type', /application\/json/)
-	expect(response.body).toHaveLength(3)
+	expect(response.body).toHaveLength(helper.initialBlog.length)
 })
 
 test('check unique identiifier', async () => {
@@ -14,6 +23,19 @@ test('check unique identiifier', async () => {
 	response.body.forEach(blog => {
 		expect(blog.id).toBeDefined()
 	});
+})
+
+test('post new blog post', async () => {
+	const newBlogPost = {
+		title: "fourth posts",
+		author: "fso 2022",
+		url: "https://fullstackopen.com/en/part4/",
+		likes: 4
+	}
+	await api.post('/api/blogs').send(newBlogPost).expect(201).expect('Content-Type', /application\/json/)
+	const blogList = await helper.blogList()
+	expect(blogList).toHaveLength(helper.initialBlog.length + 1)
+
 })
 
 afterAll(() => {

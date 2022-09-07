@@ -4,6 +4,6 @@ Content-Type: application/json
 {
 	"title": "third posts",
 	"author": "fso 2022",
-	"ulr": "https://fullstackopen.com/en/part4/",
+	"url": "https://fullstackopen.com/en/part4/",
 	"likes": 12
 }
