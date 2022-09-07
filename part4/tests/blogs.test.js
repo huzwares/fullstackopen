@@ -38,6 +38,17 @@ test('post new blog post', async () => {
 
 })
 
+test('post new blog post without like', async () => {
+	const newBlogPost = {
+		title: "fourth posts",
+		author: "fso 2022",
+		url: "https://fullstackopen.com/en/part4/"
+	}
+	await api.post('/api/blogs').send(newBlogPost).expect(201).expect('Content-Type', /application\/json/)
+	const blogList = await helper.blogList()
+	expect(blogList).toHaveLength(helper.initialBlog.length + 1)
+})
+
 afterAll(() => {
 	mongoose.connection.close()
 })
