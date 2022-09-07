@@ -16,7 +16,7 @@ beforeEach(async () => {
 test('get blog list', async () => {
 	const response = await api.get('/api/blogs').expect('Content-Type', /application\/json/)
 	expect(response.body).toHaveLength(helper.initialBlog.length)
-})
+}, 10000)
 
 test('check unique identiifier', async () => {
 	const response = await api.get('/api/blogs')
@@ -47,6 +47,24 @@ test('post new blog post without like', async () => {
 	await api.post('/api/blogs').send(newBlogPost).expect(201).expect('Content-Type', /application\/json/)
 	const blogList = await helper.blogList()
 	expect(blogList).toHaveLength(helper.initialBlog.length + 1)
+})
+
+test('post new blog without title', async () => {
+	const newBlogPost = {
+		author: "fso 2022",
+		url: "https://fullstackopen.com/en/part4/",
+		likes: 4
+	}
+	await api.post('/api/blogs').send(newBlogPost).expect(400)
+})
+
+test('post new blog without url', async () => {
+	const newBlogPost = {
+		title: "fourth posts",
+		author: "fso 2022",
+		likes: 4
+	}
+	await api.post('/api/blogs').send(newBlogPost).expect(400)
 })
 
 afterAll(() => {
