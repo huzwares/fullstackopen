@@ -67,11 +67,25 @@ test('post new blog without url', async () => {
 	await api.post('/api/blogs').send(newBlogPost).expect(400)
 })
 
-test('delete blog post with id', async () => {
+test('delete blog post', async () => {
 	const list = await helper.blogList()
 	const postToDelete = list[0]
 
 	await api.delete(`/api/blogs/${postToDelete.id}`).expect(204)
+})
+
+test('update blog post', async () => {
+	const list = await helper.blogList()
+	const postToUpdate = list[0]
+	console.info(postToUpdate)
+	const newBlogPost = {
+		title: "updated posts",
+		author: "updated author",
+		url: "udated url",
+		likes: (postToUpdate.likes * 10)
+	}
+
+	await api.put(`/api/blogs/${postToUpdate.id}`).send(newBlogPost).expect(204)
 })
 
 afterAll(() => {
