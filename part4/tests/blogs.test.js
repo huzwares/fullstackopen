@@ -67,6 +67,13 @@ test('post new blog without url', async () => {
 	await api.post('/api/blogs').send(newBlogPost).expect(400)
 })
 
+test('delete blog post with id', async () => {
+	const list = await helper.blogList()
+	const postToDelete = list[0]
+
+	await api.delete(`/api/blogs/${postToDelete.id}`).expect(204)
+})
+
 afterAll(() => {
 	mongoose.connection.close()
 })
