@@ -3,8 +3,8 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWQiOiI2MzIwYWI4ZGNjYzI5YTcxOTc1ODZlMmEiLCJpYXQiOjE2NjMwOTU4NjR9.qGfrlX-oyEd5ZNImokfbGQCX4xSHHgYnRptMkgP4SHE
 
 {
-	"title": "blog blog post with creator token",
+	"title": "another blog post with creator token. also with middleware",
 	"author": "fso 2022",
 	"url": "https://fullstackopen.com/en/part4/",
-	"likes": 3
+	"likes": 300
 }
